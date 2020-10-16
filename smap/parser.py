@@ -1,4 +1,4 @@
-import storm_parser
+from smap.storm_parser import ConfigParser
 import shutil
 import os
 
@@ -68,10 +68,10 @@ def format_proxyjump_graph(p, proxyjump_graph_fmt):
         return " → ".join(p)
 
 
-def load(proxyjump_graph_fmt):
+def load_ssh_config(proxyjump_graph_fmt):
     data = list([
         x
-        for x in storm_parser.ConfigParser().load()
+        for x in ConfigParser().load()
         if x['type'] == 'entry' and x['host'] != '*'
     ])
 
