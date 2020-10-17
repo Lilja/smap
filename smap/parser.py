@@ -87,18 +87,4 @@ def load_ssh_config(proxyjump_graph_fmt):
 
 
 def ssh(host):
-    import subprocess
-    # cmd = shutil.which('ssh')
-    # os.execv(cmd, [cmd, host])
-    ssh = subprocess.Popen(
-        ["ssh", host],
-        shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
-    )
-    result = ssh.stdout.readlines()
-    if result == []:
-        for x in ssh.stderr.readlines():
-            print(x.decode('utf-8'))
-    else:
-        print(result)
+    os.execvp('ssh', ['ssh', host])
