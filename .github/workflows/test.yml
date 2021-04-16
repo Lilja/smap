@@ -1,9 +1,7 @@
 name: golangci-lint
 on:
   push:
-    tags:
-      - v*
-    branches:
+    branches-ignore:
       - master
       - main
 jobs:
