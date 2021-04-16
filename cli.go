@@ -86,3 +86,8 @@ func GetConfig() Config {
 func (Config) Description() string {
   return "Find hosts in ssh configs and uses fuzzy search to list these. Version " + version
 }
+
+// Version is for the go-arg library.
+func (Config) Version() string {
+  return "smap " + version
+}
