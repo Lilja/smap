@@ -1,21 +1,10 @@
-  // main.go
-  package main
-  import (
-      "github.com/kevinburke/ssh_config"
-      "fmt"
-      "os"
-      "path/filepath"
-  )
-  func main() {
-      f, _ := os.Open(filepath.Join(os.Getenv("HOME"), ".ssh", "config"))
-      cfg, _ := ssh_config.Decode(f)
+// main.go
+package main
 
-      for _, host := range cfg.Hosts {
-          fmt.Println("patterns:", host.Patterns)
-          for _, node := range host.Nodes {
-              // Manipulate the nodes as you see fit, or use a type switch to
-              // distinguish between Empty, KV, and Include nodes.
-              fmt.Println(node.String())
-          }
-      }
-  }
+func main() {
+  config := GetConfig()
+  hosts := GetAllHostsFromSSHConfig(config)
+  table := Format(hosts, config)
+  // RenderTable(table, config)
+  RenderFZF(table, config)
+}
