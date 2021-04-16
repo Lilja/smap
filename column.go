@@ -62,5 +62,5 @@ func CheckColumnProperty(s string) (Column, error) {
   if safe {
     return v, nil
   }
-  return v, errors.New("Unrecognized value '" + s + "'")
+  return v, errors.New("Unrecognized value '" + s + "'. Valid values are " + strings.Join(getColumnKeys(), ","))
 }

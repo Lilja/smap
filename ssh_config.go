@@ -1,6 +1,7 @@
 package main
 
 import (
+  "fmt"
   "log"
   "regexp"
   "os"
@@ -50,14 +51,28 @@ func _GetHosts(str string, allHosts []SSHHost) []SSHHost {
   }
 
   return allIncludes
-
 }
+
+// expandTilde takes a path(str), and expands the home/tilde
+func expandTilde(str string) string {
+  if strings.HasPrefix(str, "~/") {
+    return filepath.Join(os.Getenv("HOME"), str[2:])
+  }
+  return str
+}
+
 
 // GetAllHostsFromSSHConfig reads into the specified config file and creates an internal representation called SSHHost
 func GetAllHostsFromSSHConfig(config Config) []SSHHost {
   var hosts []SSHHost
-  filepath := config.File
-  content, _ := ioutil.ReadFile(filepath)
+  filepath := expandTilde(config.File)
+  log.Println("Reading file: ", config.File)
+  content, err := ioutil.ReadFile(filepath)
+  if err != nil {
+    fmt.Println("Error")
+    log.Fatal("ASDASDASD", err)
+  }
+  log.Println("Reading file: ", config.File)
   text := string(content)
   cfg, _ := ssh_config.Decode(strings.NewReader(text))
   return _GetHosts(cfg.String(), hosts)

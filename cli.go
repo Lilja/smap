@@ -1,7 +1,7 @@
 package main
 
 import (
-  "fmt"
+  "os"
   "strings"
   "log"
   "io/ioutil"
@@ -15,7 +15,7 @@ type Columns []Column
 
 // Config is the config of the program.
 type Config struct {
-  Verbose bool `default:"False"`
+  Verbose bool `arg:"-v,--verbose" help:"verbosity level" default:"False"`
   Columns Columns `Help:"The columns to show. Edit me"`
   File string `help:"The ssh config file to read" default:"~/.ssh/config"`
 }
@@ -66,18 +66,22 @@ func (columns *Columns) GetText() []string {
 
 // GetConfig uses go-arg library and returns a config
 func GetConfig() Config {
+  blockGoArg := false
+  for _, x := range os.Args {
+    if x == "-v" || x == "--verbose" {
+      log.Println("Verbose logging, ")
+      log.SetOutput(os.Stdout)
+      blockGoArg = true
+      break
+    }
+  }
   var conf Config
 
-  arg.MustParse(&conf)
-  fmt.Println(conf.Verbose)
-  fmt.Println(conf.Columns)
-
-  if !conf.Verbose {
+  if !conf.Verbose && !blockGoArg {
     log.SetFlags(0)
     log.SetOutput(ioutil.Discard)
-  } else {
-    log.Println("Verbose logging")
   }
+  arg.MustParse(&conf)
 
   return conf
 }
