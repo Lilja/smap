@@ -66,13 +66,12 @@ func expandTilde(str string) string {
 func GetAllHostsFromSSHConfig(config Config) []SSHHost {
   var hosts []SSHHost
   filepath := expandTilde(config.File)
-  log.Println("Reading file: ", config.File)
+  log.Println("Reading root ssh config file", config.File)
   content, err := ioutil.ReadFile(filepath)
   if err != nil {
-    fmt.Println("Error")
-    log.Fatal("ASDASDASD", err)
+    fmt.Println("Error reading", filepath, err)
+    log.Fatal("Error reading", filepath, err)
   }
-  log.Println("Reading file: ", config.File)
   text := string(content)
   cfg, _ := ssh_config.Decode(strings.NewReader(text))
   return _GetHosts(cfg.String(), hosts)

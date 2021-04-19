@@ -1,10 +1,11 @@
 package main
 
 import (
-  "strings"
   "log"
+  "os"
+  "os/exec"
+  "strings"
   "github.com/olekukonko/tablewriter"
-  "fmt"
   "github.com/ktr0731/go-fuzzyfinder"
 )
 
@@ -44,16 +45,24 @@ func splitAndFilter(str string) []string {
 }
 
 // RenderFZF takes data and renders with fzf
-func RenderFZF(tableData [][]string, config Config) {
+func RenderFZF(tableData [][]string, hosts []SSHHost, config Config) {
   formatedString := renderTable(tableData, config)
   idx, err := fuzzyfinder.Find(
       formatedString,
       func(i int) string {
           return formatedString[i]
-      })
+      },
+  )
   if err != nil {
-      log.Fatal("FZF ", err)
+    log.Fatal("Fuzzyfinder error ", err)
+  } else {
+    host := hosts[idx]
+    log.Println("Selected index", idx, " Host: ", host, " name: ", host.name)
+    cmd := exec.Command("ssh", host.name)
+    cmd.Stdout = os.Stdout
+    cmd.Stdin = os.Stdin
+    cmd.Stderr = os.Stderr
+    log.Println("Running cmd")
+    cmd.Run()
   }
-  fmt.Printf("selected: %v\n", idx)
-
 }

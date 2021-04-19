@@ -64,3 +64,49 @@ func CheckColumnProperty(s string) (Column, error) {
   }
   return v, errors.New("Unrecognized value '" + s + "'. Valid values are " + strings.Join(getColumnKeys(), ","))
 }
+
+// UnmarshalText is for go-arg for custom validating/parsing of the []Column from CLI
+func (columns *Columns) UnmarshalText(b []byte) error {
+  s := string(b)
+  log.Println("Parsing columns")
+
+  var err error
+  if !strings.Contains(s, ",") {
+    log.Println("Checking prop '", s, "'")
+    column, _err := CheckColumnProperty(s)
+    log.Println("Checking prop: error", err)
+    if _err == nil {
+      log.Println("Adding to column list", column)
+      *columns = append(*columns, column)
+    } else {
+      log.Println("Adding error", _err)
+      err = _err
+    }
+  } else {
+    log.Println("[m] Checking prop for multiple")
+    for _, prop := range strings.Split(s, ",") {
+      log.Println("[m] Checking prop for multiple", prop)
+      val, _err := CheckColumnProperty(prop)
+      if _err == nil {
+        log.Println("[m] Adding to column list", val)
+        *columns = append(*columns, val)
+      } else {
+        log.Println("[m] Adding error", _err)
+        err = _err
+      }
+    }
+  }
+  log.Println("Column Validator error", err)
+  return err
+}
+
+// GetText returns the header to be used for table formatting of the specified columns
+func (columns *Columns) GetText() []string {
+  x := make([]string, len(*columns))
+  for _, column := range *columns {
+    x = append(x, columnValues[column])
+  }
+  return x
+}
+
+

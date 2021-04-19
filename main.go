@@ -6,5 +6,5 @@ func main() {
   hosts := GetAllHostsFromSSHConfig(config)
   table := Format(hosts, config)
   // RenderTable(table, config)
-  RenderFZF(table, config)
+  RenderFZF(table, hosts, config)
 }
