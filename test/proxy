@@ -1,0 +1,15 @@
+Host frontend.google.com
+    Hostname whatever.google.com
+    User root
+    Port 1234
+
+Host fakeJumpHost
+    Hostname fake.google.com
+    User root
+    ProxyJump frontend.google.com
+
+Host FakeGoogleServer
+    Hostname qwepiqwpqow.fake.lan
+    User root
+    ProxyJump fakeJumpHost
+    Port 2334
