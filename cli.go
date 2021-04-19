@@ -1,6 +1,7 @@
 package main
 
 import (
+  "runtime"
   "os"
   "log"
   "io/ioutil"
@@ -34,8 +35,9 @@ func GetConfig() Config {
   blockGoArg := false
   for _, x := range os.Args {
     if x == "-v" || x == "--verbose" {
-      log.Println("Verbose logging, ")
       log.SetOutput(os.Stdout)
+      log.Println("Verbose logging, ")
+      log.Println("Device, os:", runtime.GOOS, "arch:", runtime.GOARCH)
       blockGoArg = true
       break
     }
