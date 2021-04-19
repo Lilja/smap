@@ -63,6 +63,9 @@ func RenderFZF(tableData [][]string, hosts []SSHHost, config Config) {
     cmd.Stdin = os.Stdin
     cmd.Stderr = os.Stderr
     log.Println("Running cmd")
-    cmd.Run()
+    e := cmd.Run()
+    if e != nil {
+      log.Fatal("Unable to run ssh command", e)
+    }
   }
 }
