@@ -3,8 +3,11 @@ package main
 
 func main() {
   config := GetConfig()
-  hosts := GetAllHostsFromSSHConfig(config)
-  table := Format(hosts, config)
-  // RenderTable(table, config)
-  RenderFZF(table, hosts, config)
+  if config.CheckForUpdates {
+    CheckForUpdates(config)
+  } else {
+    hosts := GetAllHostsFromSSHConfig(config)
+    table := Format(hosts, config)
+    RenderFZF(table, hosts, config)
+  }
 }

@@ -8,7 +8,13 @@ import (
   "github.com/alexflint/go-arg"
 )
 
-var version = "0.1.0"
+// These strings are changed with the github action goreleaser is changed with ldflags
+var (
+  version   = "dev"
+  commit    = ""
+  builtDate = ""
+  builtBy   = ""
+)
 
 // Columns is a list of column.
 type Columns []Column
@@ -28,6 +34,10 @@ type Config struct {
   Columns Columns
   File string
   CheckForUpdates bool
+  version string
+  builtDate string
+  builtBy string
+  commit string
 }
 
 // GetConfig uses go-arg library and returns a config
@@ -36,8 +46,9 @@ func GetConfig() Config {
   for _, x := range os.Args {
     if x == "-v" || x == "--verbose" {
       log.SetOutput(os.Stdout)
-      log.Println("Verbose logging, ")
+      log.Println("Verbose logging")
       log.Println("Device, os:", runtime.GOOS, "arch:", runtime.GOARCH)
+      log.Println("Version", version)
       blockGoArg = true
       break
     }
@@ -56,6 +67,10 @@ func GetConfig() Config {
     Columns: flags.Columns,
     File: flags.File,
     CheckForUpdates: flags.Update,
+    version: version,
+    builtBy: builtBy,
+    builtDate: builtDate,
+    commit: commit,
   }
 
   return conf
